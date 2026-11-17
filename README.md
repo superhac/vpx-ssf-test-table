@@ -2,7 +2,8 @@
 
 A Visual Pinball X utility table for checking that a 7.1 Surround Sound Feedback (SSF) cabinet is wired and configured correctly. It plays a test sound on one speaker at a time and shows the active speaker on the backglass.
 
-![Speakers](https://img.shields.io/badge/output-7.1%20SSF-orange)
+<img width="981" height="565" alt="image" src="https://github.com/user-attachments/assets/f3e75950-9e12-4ca9-a0d5-98486401d2ae" />
+
 
 ## Contents
 
