@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to create (e.g. v1.0.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve tag
+        id: tag
+        run: echo "name=${{ github.event.inputs.tag || github.ref_name }}" >> "$GITHUB_OUTPUT"
+
+      - name: Build zip
+        run: |
+          # Every tracked file except repository plumbing, inside a SSF_Speaker_Test/ folder
+          zip_name="SSF_Speaker_Test-${{ steps.tag.outputs.name }}.zip"
+          git archive --format=zip --prefix=SSF_Speaker_Test/ -o "$zip_name" HEAD -- . ':!.github' ':!.gitignore'
+          unzip -l "$zip_name"
+          echo "ZIP_NAME=$zip_name" >> "$GITHUB_ENV"
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.name }}
+          name: SSF Speaker Test ${{ steps.tag.outputs.name }}
+          generate_release_notes: true
+          files: ${{ env.ZIP_NAME }}
